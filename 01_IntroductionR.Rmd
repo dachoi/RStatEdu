@@ -1,0 +1,585 @@
+---
+title: "Introduction to R"
+output: html_document 
+mode   : standalone
+  
+---
+
+
+* 관련 파일 : 없음
+* 필요 패키지 :`ggplot2`
+
+*****************************************
+
+## 1. Introduction
+
+
+  - R은 통계적 계산을 하는데 매우 유용한 컴퓨터 언어임
+  - R을 사용하여 Data summary, Exploration, Graphical presentation, Data modeling 등이 가능
+  - R은 *object* 기반의 언어로서 *scalar*, *vectors*, *matrices*, *lists*, *dataframes* 등의 형태가 있음
+  함
+  - 본 문서는 기본적인 R언어를 학습하고 이를 실전에 적용할 수 있는 것에 목적을 두고 있음
+  - R과 관련된 정보와 다운로드는 홈페이지 [http://www.r-project.org](http://www.r-project.org/)에서 가능
+  
+<br>  
+  
+## 2. Objects and Arithmetic
+
+  
+* 단순계산  
+  
+```{r}
+4 + 6 # scalar 계산
+```
+
+<br>
+
+* Object를 지정하여 계산하면
+
+```{r}
+x <- 6
+y <- 4
+z <- x + y
+z
+```
+
+<br> 
+
+* 생성한 object를 살펴보기 위해서는
+
+```{r}
+ls()
+```
+
+<br> 
+
+* 반대로 생성된 object를 제거하기 위해서는
+
+```{r}
+rm(x,y)
+```
+
+<br> 
+
+* 함수 `c()`를 사용하면 각각의 요소를 하나로 뭉칠 수 있음
+
+```{r}
+z <- c(5,9,1,0)
+```
+
+<br> 
+
+* 다음과 같은 방법으로도 가능
+
+```{r}
+x <- c(5,9)
+y <- c(1,0)
+z <- c(x,y)
+z
+```
+
+<br> 
+
+* Sequences는 다음과 같이 표현 가능
+
+```{r}
+x <- 1:10
+
+```
+
+<br> 
+
+* `seq()`함수를 이용하면
+
+```{r}
+seq(1,9, by=2) # 2씩 증가
+seq(8, 20, length=6) # 6개로 분할
+```
+
+<br> 
+
+* `rep()` 함수를 이용하면 반복하여 출력할 수 있음
+
+```{r}
+rep(0, 100)
+rep(1:3, 6)
+rep(1:3, c(6,6,6))
+rep(1:3, each=6)
+rep(1:3, rep(6,3))
+```
+
+<br> 
+
+* Object끼리 연산이 가능
+
+```{r}
+x <- c(6, 8, 9)
+y <- c(1, 2, 4)
+x+y
+x*y
+```
+
+<br> 
+
+* Mixed 된 형태로도 연산 가능
+
+```{r}
+x <- c(6,8,9)
+x + 2 # object + 숫자
+```
+
+<br>
+
+
+## 3. Summaries and Subscripting
+
+* Data를 모은 것을 object x에 지정했다고 가정해보면
+
+```{r}
+x <- c(7.5,8.2,3.1,5.6,8.2,9.3,6.5,7.0,9.3,1.2,14.5,6.2)
+```
+
+<br> 
+
+* 데이터에 대한 간단한 통계량은 다음과 같이 구할 수 있음
+
+```{r}
+mean(x)
+var(x)
+summary(x)
+```
+
+* 여기서, 
+    + `1st Qu.` , `3rd Qu` : 제 1, 3 사분위수(Quartile)
+    +  `Median` : 중앙값으로 일종의 제 2 사분위수
+
+
+**************************
+
+* `x`를 앞의 6개와 뒤의 6개의 데이터로 분할한다고 한다면
+
+```{r}
+x[1:6]
+x[7:12]
+```
+
+<br> 
+
+* 분할된 데이터를 살펴보면
+
+```{r}
+summary(x[1:6])
+summary(x[7:12])
+```
+
+<br> 
+
+* 특정 데이터를 선택할 수도 있음
+
+```{r}
+x[c(2,4,9)] # x의 2,4,9번째 데이터
+```
+
+<br> 
+
++ (-)기호를 사용하면 특정 데이터가 제외되고 남은 데이터를 확인
+
+```{r}
+x[-(1:6)]
+```
+
+<br>
+
+## 4. Matrices
+
+
+#### 4.1 Matrix 생성
+
+```{r}
+x <- c(5,7,9)
+y <- c(6,3,4)
+z<-cbind(x,y)
+z
+```
+
+  - `z`는 `x`와 `y`를 열방향으로 합친 matrix임을 확인
+  
+
+**************************
+
+* Matrix의 dimension을 살펴보기 위해서는
+
+```{r}
+dim(z)
+```
+
+  - 3개의 행과 2개의 열이 생성
+
+**************************
+
+* `rbind()`를 이용하면 행방향으로 합치는 것이 가능
+
+```{r}
+rbind(z,z)
+```
+
+  - 같은 object를 합칠수도 있음
+
+<br> 
+
+#### 4.2 함수를 사용하여 matirx 생성
+
+```{r}
+z <-matrix(c(5,7,9,6,3,4),nrow=3) 
+z
+```
+
+  - `nrow=3` : 행의 수를 3개로 지정
+
+<br> 
+
+```{r}
+z<-matrix(c(5,7,9,6,3,4),nr=3,byrow=T)
+z
+```
+
+  - `nrow=3`를 `nr=3`로 줄여서 쓸 수 있음
+  - `byrow=T` , 즉  True인 경우 행방향으로 원소를 배열
+
+**************************
+
+* Matrix의 연산
+
+```{r}
+y<-matrix(c(1,3,0,9,5,-1),nrow=3,byrow=T)
+y
+y+z
+y*z
+```
+
+  - `y*z`는 행렬의 곱을 나타낸 것이 아닌 각 원소의 곱임에 주의
+  
+**************************
+
+* 행렬간의 곱은 `%*%` 연산자를 통해 가능
+```{r}
+x<-matrix(c(3,4,-2,6),nrow=2,byrow=T)
+x
+y%*%x
+```
+
+<br> 
+
+* 행렬의 transpose는 `t()`, inverse는 `solve()`로 계산
+```{r}
+t(z)
+solve(x)
+```
+
+<br> 
+
+* Matrix의 원소 추출
+
+
+```{r}
+z
+z[1,1] # 1행1열의 원소
+z[c(2,3),2] # 2행&3행의 2열 원소
+z[, 2] # 2열의 원소
+z[1:2, ] #1부터2까지 행의 원소
+```
+
+  - 둘중 한 dimension을 비워놓는다면 이는 해당 dimension의 모든 원소를 선택
+  - **[행,열]** 를 사용하여 원하는 행, 열, 원소를 추출할 수 있음
+
+<br>
+
+## 5.Attaching to objects
+
+  - R은 datasets를 포함하고 있음
+  - 포함 된 data를 불러오기 위해서 `data(Dataset)`을 이용해서 데이터 로드
+
+
+```{r}
+data(trees)
+trees[1:5,]
+```
+
+  - dataset`tree`를 로드
+  - 데이터의 1:5행까지를 출력함으로 데이터 형식 확인
+
+<br> 
+
+* 데이터셋의 열을 `trees[,2]`와 같이 추출할 수도 있지만 함수를 이용하여 더욱 편하게 추출 가능
+```{r}
+attach(trees)
+```
+
+  - `attach()`를 이용하여 trees에 있는 열을 바로 인식하도록 설정
+  
+**************************
+
+- `Height`는 데이터셋의 column 이름으로서 R에서 해당 column으로 인식
+```{r}
+mean(Height)
+mean(trees[,2]) # 같은 결과
+```
+
+<br> 
+
+- `trees` 데이터셋은 column의 이름이 있는 dataframe형태로 다음과 같은 column 추출이 가능
+```{r}
+trees$Height
+```
+
+<br>
+
+## 6. The apply function
+
+
+  - R에서 loop문을 사용할 수 있지만 이는 최대한 피하는 것이 좋음
+  - loop문을 사용하는 것은 그만큼 처리 속도가 느려지기 때문임 
+  - `apply()`를 통해 column 이나 row에 함수를 적용시킬 수 있음
+
+
+```{r}
+apply(trees,2,mean)
+
+```
+
+  - `trees` 데이터셋의 column별로 평균을 구함 (Row방향은 1, Column방향은 2)
+  
+  
+<br>  
+
+
+## 7. Writing functions
+
+
+  - R의 중요한 기능 중 하나는 원하는 함수 제작임
+  - 기존의 함수를 이용하여 새로운 함수를 제작함 
+
+**************************
+
+* 표준편차(Standard deviation) 함수 만들기
+```{r}
+my.sd <- function(x) sqrt(var(x))
+x<-c(9,5,2,3,7)
+my.sd(x)
+```
+
+<br> 
+
+* `fix()`함수를 통해 함수 내용을 변경 가능
+```{r,results='hide'}
+fix(my.sd)
+```
+
+
+<br>  
+
+
+## 8. Data Visualization via _ggplot2_
+
+```{r}
+library(ggplot2)
+str(iris)
+iris[1:10, ]
+
+str(mtcars)
+mtcars[1:10,]
+```
+
+![iris](http://sebastianraschka.com/Images/2014_python_lda/iris_petal_sepal.png)
+
+![spec](http://palaeomath.palass.org/images/groups1/Fig1.jpg)
+
+*********************************
+
+#### 8.1 Scatterplots with _qplot()_
+
+* Plot Sepal.Length vs. Petal.Length, using data from the `iris` data frame
+```{r}
+qplot(Sepal.Length, Petal.Length, data = iris)
+       
+qplot(Sepal.Length, Petal.Length, data = iris, color = Species)
+       
+qplot(Sepal.Length, Petal.Length, data = iris, color = Species, size = Petal.Width)
+```
+
+<br>
+
+************************************
+
+* We see that Iris setosa flowers have the narrowest petals.
+
+```{r}
+qplot(Sepal.Length, Petal.Length, data = iris, color = Species, size = Petal.Width, alpha = I(0.7))
+```
+
+* By setting the alpha of each point to 0.7, we reduce the effects of overplotting.
+
+<br>
+
+*******************************************
+
+```{r}
+qplot(Sepal.Length, Petal.Length, data = iris, color = Species,
+      xlab = "Sepal Length", ylab = "Petal Length",
+      main = "Sepal vs. Petal Length in Fisher's Iris data")
+```
+
+<br>
+
+****************************************
+
+* These two invocations are equivalent.
+```{r}
+qplot(Sepal.Length, Petal.Length, data = iris, geom = "point")
+qplot(Sepal.Length, Petal.Length, data = iris)
+
+```
+
+*******************************************
+
+#### 8.2 Barcharts: _geom = "bar"_
+
+```{r}
+movies <- data.frame(
+  director = c("spielberg", "spielberg", "spielberg", "jackson", "jackson"),
+  movie = c("jaws", "avatar", "schindler's list", "lotr", "king kong"),
+  minutes = c(124, 163, 195, 600, 187)
+)
+```
+
+***************
+
+* Plot the number of movies each director has.
+* By default, the height of each bar is simply a count.
+```{r}
+qplot(director, data = movies, geom = "bar", ylab = "# movies")
+```
+
+****************************
+
+
+* But we can also supply a different weight.
+* Here the height of each bar is the total running time of the director's movies.
+
+```{r}
+qplot(director, weight = minutes, data = movies, geom = "bar", ylab = "total length (min.)")
+```
+
+#### 8.3 Line Charts: _geom = "line"_
+
+```{r}
+qplot(Sepal.Length, Petal.Length, data = iris, geom = "line", color = Species)
+```
+*  Using a line geom doesn't really make sense here.
+
+***************************
+
+* `Orange` is another built-in data frame that describes the growth of orange trees.
+```{r}
+qplot(age, circumference, data = Orange, geom = "line",
+      colour = Tree,
+      main = "How does orange tree circumference vary with age?")
+```
+
+*****************************
+
+
+* We can also plot both points and lines.
+```{r}
+qplot(age, circumference, data = Orange, geom = c("point", "line"), colour = Tree)
+```
+
+
+#### 8.4 Box Plots: _geom = "boxplot"_
+
+```{r}
+p <- ggplot(mtcars, aes(factor(cyl), mpg)) 
+p + geom_boxplot()
+```
+
+* Or equivalently, 
+```{r}
+qplot(factor(cyl), mpg, data = mtcars, geom = "boxplot")
+```
+
+<br>
+
+******************
+
+```{r}
+p + geom_boxplot() + geom_jitter()
+```
+* with jitter...
+
+<br>
+
+********************************
+
+```{r}
+p + geom_boxplot() + coord_flip()
+```
+
+<br>
+
+* Or equivalently
+```{r}
+qplot(factor(cyl), mpg, data = mtcars, geom = "boxplot") +  coord_flip()
+````
+
+*****************************
+
+```{r}
+p + geom_boxplot(outlier.colour = "green", outlier.size = 3)
+```
+
+<br>
+
+******************
+
+* Add aesthetic mappings 
+    - Note that boxplots are automatically dodged when any aesthetic is a factor
+    
+```{r}
+p + geom_boxplot(aes(fill = cyl))
+```
+
+```{r}
+p + geom_boxplot(aes(fill = factor(cyl)))
+```
+
+
+```{r}
+p + geom_boxplot(aes(fill = factor(vs)))
+
+p + geom_boxplot(aes(fill = factor(am)))
+
+```
+
+
+#### 8.5 Histogram
+
+```{r}
+qplot(mtcars$mpg)
+qplot(mtcars$mpg, binwidth=2.5)
+qplot(mtcars$mpg, binwidth=2.5, fill="red")
+```
+
+****************************
+
+```{r}
+ggplot(mtcars, aes(x=mpg))+geom_histogram(binwidth = 2.5, fill = "steelblue", colour = "yellow")
+ggplot(mtcars, aes(x=mpg))+geom_histogram(binwidth = 2.5, fill = "steelblue", colour = "yellow") + facet_wrap(~cyl)
+ggplot(mtcars, aes(x=mpg))+geom_histogram(binwidth = 2.5, fill = "steelblue") + facet_grid(cyl~.)
+```
+
+
+********************************
+    * 작성자: 최대우 (한국외대), 김준석, 황명식(한국외대 Advice)
+    * 작성일: 2014년 9월
+
+![logo](./image/AdviceLOGO.png)
