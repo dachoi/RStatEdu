@@ -1,0 +1,323 @@
+---
+title: "Introduction to Statistics and Probability - I"
+author: ''
+date: ''
+output:
+  html_document: default
+---
+
+* R syntax 관련하여 더욱 상세한 것은 [공식 tutorial](http://cran.r-project.org/doc/manuals/r-release/R-intro.html) 을 참고하길 바람
+* 필요 파일 : 없음
+* 필요 패키지 :`ggplot2`
+
+
+**************************
+
+## 1. Data의 종류 및 정리 
+<br>
+
+#### 1.1 모집단과 표본
+
+* 모집단 (population)
+    - 관심의 대상이 되는 모든 가능한 관측값이나 측정값의 집합
+    - 예를 들어,
+        - 대통령 선거의 경우, 유권자 전체
+        - 2014년 8월에 생산된 갤럭시 노트4 전체
+* 표본 (sample)
+    - 모집단에서 실제로 추출한 관측값이나 측정값
+    - 예를 들어, 
+        - 대통령 선거결과 예측을 위해 2만명을 추출(sampling)하여 전화조사
+        - 2014년 8월에 생산된 갤럭시 노트4 중, 2000대를 추출하여 조사, 혹은 생산날짜가 홀수일인 제품만 조사 
+      
+```{r}
+# 비복원 추출 (without replacement)
+sample(1:20, 10)
+
+# 복원 추출 (with replacemnet) 
+sample(1:20, 10, replace=T)
+
+```
+
+<br> 
+
+#### 1.2 자료의 종류
+
+- 계량적 자료(quantitative data) 
+    * 몸무게, 키 등과 같이 단위가 있는 자료
+- 질적 자료(qualitative data) 
+    * 학년, 성별등에 해당되는 자료로 범주형 자료(categorical data)라고도 함
+    * 질적자료는 다시 명목자료와 순서자료로 나눌 수 있음.
+        * 명목자료 (nominal data) : 성별의 남자와 여자와 같이 순서 개념이 없음
+        * 순서자료 (ordinal data) : 학년, 수입의 정도와 같이 순서의 개념이 있음
+        
+<br> 
+
+```{r}
+x = c("Yes", "No", "No", "Yes", "Yes")
+table(x)
+factor(x)
+```
+
+```{r}
+beer = c(3, 4, 1, 1, 3, 4, 3, 3, 1, 3, 2, 1, 2, 1, 2, 3, 2, 3, 1, 1, 1, 1, 4, 3, 1)
+barplot(table(beer)/length(beer))
+```
+
+```{r}
+library(ggplot2)
+beer.df <- data.frame(table(beer)/length(beer))
+qplot(beer, weight=Freq, data=beer.df, geom="bar")
+```
+
+**************************
+
+```{r}
+beer.counts <- table(beer)
+pie(beer.counts)
+```
+
+******************************
+
+```{r}
+names(beer.counts) = c("domestic\n can", "Domestic\n bottle", "Microbrew", "Import")
+# \n 은 줄바꾸기용
+pie(beer.counts)
+pie(beer.counts, col = c("purple", "green2", "cyan", "white"))
+```
+
+
+#### 1.3 자료의 중심 및 산포의 측도
+
+현재 보유한 $n$개의 자료를 $x_{1}, x_{2}, \ldots, x_{n}$라함 
+
+* 중심위치의 측도
+    - 표본평균 (sample mean) $$\bar{x}=\frac{x_{1}+ x_{2}+ \cdots + x_{n}}{n}$$
+    - 중앙값 (emdian)
+        * 자료를 크기 순서대로 나열하였을 때, 순위가 중앙에 해당되는 값
+        * 만약 만약 자료의 개수가 짝수인 경우는 순위 중앙에 가까운 두 수의 평균을 중앙값으로 한다
+    - 최빈값 (mode)
+        * 자료 중 가장 빈도가 높은 관착치
+
+<br>
+![meanmode](http://flowjo.typepad.com/the_daily_dongle/images/2007/10/15/central_tendancy.jpg)
+
+
+<br>
+
+* 산포의 측도
+    - 범위 (range)
+        * 자료의 최대치 - 자료의 최소치
+    - 표본 표준편차 (standard deviation)
+        * 표본분산 $$s^{2} = \sum_{i=1}^{n} (x_{i}-\bar{x})^{2} / (n-1) $$
+        * 표본 표준편차 $s=\sqrt{s^2}$
+    - 사분위 범위 (interquartile range, IQR)
+        * $\mbox{IQR}= Q_{3} - Q_{1}$
+        * 여기서, $Q_{1}, Q_{3}$ 는 자료를 순서대로 나열한 후 4등분하였을	때 각각 첫 번째와 세 번째에 해당되는 수이다.     
+
+<br>
+![iqr](http://www.mathsisfun.com/data/images/interquartile-range.gif)
+
+<br>
+![iqrexample](http://sphweb.bumc.bu.edu/otlt/mph-modules/bs/bs704_summarizingdata/Interquartile-Even.png)
+
+<br>   
+
+****************************************
+
+* `mean` : data의 평균
+* `var` : data의 분산
+* `sd` : data의 표준편차 
+* `max` : data의 최대값
+* `min` : data의 최소값
+* `summary` : vector의 경우 최소값, 1 사분위 수, 중앙값, 평균, 3 사분위 수, 최대값이 출력
+* `quantile` : 분위수
+
+```{r}
+sales <- c(12, 0.4, 5, 2, 50, 8, 3, 1, 4, 0.25)
+mean(sales)
+var(sales)
+median(sales)
+var(sales)
+sd(sales)
+summary(sales)
+quantile(sales, 0.25)
+quantile(sales, c(0.25, 0.75))
+sort(sales)
+IQR(sales)
+```
+
+*********************
+
+```{r}
+scores <- c(2, 3, 16, 23, 14, 12, 4, 13, 2, 0, 0, 0, 6, 28, 31, 14, 4, 8, 2, 5)
+stem(scores)
+```
+
+
+**************************
+
+```{r}
+cats <- cut(sales, breaks = c(0, 1, 5, max(sales)))
+cats
+table(cats)
+```
+
+
+```{r}
+levels(cats) <- c("poor", "rich", "rolling in it")
+table(cats)
+```
+
+********************************
+
+```{r}
+x = c(29.6, 28.2, 19.6, 13.7, 13, 7.8, 3.4, 2, 1.9, 1, 0.7, 0.4, 0.4, 0.3, 0.3, 
+    0.3, 0.3, 0.3, 0.2, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1)
+hist(x)
+qplot(x, binwidth=5)
+```
+
+*******************************
+
+![boxplot](http://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Boxplot_vs_PDF.svg/598px-Boxplot_vs_PDF.svg.png)
+
+<br>
+
+```{r}
+boxplot(sales)
+boxplot(scores)
+```
+
+<br>
+
+#### 1.4 표본 상관계수 (sample correlation coefficient) 
+
+자료가 $(x_{1}, y_{1}), \ldots, (x_{n}, y_{n})$ 와 같이 두 변수로 이루어졌을 때, 표본 상관계수는 두 변수간의 직선관계를 나타내는 수
+
+* 표본상관계수 $$r = \frac{\sum_{i=1}^{n} (x_{i}-\bar{x})(y_{i} - \bar{y})}{\sqrt{\sum_{i=1}^{n} (x_{i}-\bar{x})^{2} \sum_{i=1}^{n} (y_{i} - \bar{y})^{2}}}$$
+* 표본상관계수 $r$의 성질
+    - $r$의 범위는 $-1 < r < 1$
+    - $r$의 값은 두 변수간의 선형관계를 나타내는 측도로써 양(+)이면 산점도 상에서 두 변수가 기울기가 양인 직선관계이며, 음(-)이면 음의 기울기 관계임을 나타냄
+    - 변수 $x_{i}$들을 $a x_{i}+b$, 변수 $y_{i}$들을 $c y_{i}+d$로 치환하여도 상수 $a, c$의 부호가 같다면 $r$ 값에는 변함이 없음 
+
+<br>
+![corr](http://education-portal.com/cimages/multimages/16/refimages_correlation_graphs.gif)
+
+<br>
+![correxmple](http://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Correlation_examples2.svg/1280px-Correlation_examples2.svg.png)
+
+<br>
+
+********************************
+```{r}
+y <- sort(rnorm(40, 170, 26)) # 평균 170, 표준편차 26인 정규분포에서 40개의 난수 생성
+x <- sort(rnorm(40, 70, 6)) # 평균 70, 표준편차 6인 정규분포에서 40개의 난수 생성
+
+matrix <- cbind(x,y)
+head(matrix)
+
+```
+  - `sort()` : 자료를 순서대로 배열
+  - `rnorm()` : 정규분포의 난수생성
+  - `cbind()` : 랜덤샘플로 생성된 x와 y를 column 방향으로 병합
+  
+<br>
+
+```{r}
+cov(x,y)
+cor(x,y)
+```
+  - `cov(x,y)` : x와 y의 covariance 
+  - `cor(x,y)` : x와 y의 correlation 
+  - correlation 값이 양수이고 강한 양의 값을 보임
+  
+<br>
+ 
+그래프를 그려 확인해 보면
+```{r}
+plot(x, y, xlab="Height", ylab="Weight", main="Weights and Heights")
+```
+
+<br>
+
+#### 1.5 그 외 분포에 관한 측도
+
+* 왜도
+    - 자료 분포가 한 방향으로 치우친 정도를 나타내는 측도
+    - 왜도의 추정치 $$\frac{1}{n} \sum_{i=1}^{n} { \left( \frac{x_{i}-\bar{x}}{s} \right) }^3$$
+    - skewed to the right, 즉 왜도의 추정치가 0보다 크다 
+    - skewed to the left, 즉 왜도의 추정치가 0보다 작다 
+   
+<br>
+![skewness](http://www.statisticshowto.com/wp-content/uploads/2014/02/pearson-mode-skewness.jpg)
+   
+<br>
+
+* 첨도 
+    - 자료 분포의 꼬리부분의 두터움을 나타내는 측도
+    - 첨도의 추정치 $$\frac{1}{n} \sum_{i=1}^{n} { \left( \frac{x_{i}-\bar{x}}{s} \right) }^4 - 3$$
+    - 정규분포의 경우 첨도 값은 3 !
+    - 즉, 첨도 값이 0보다 크면 정규  분포보다 꼬리가 두꺼움 (heavy-tailed)을 의미함 
+    - t-분포의 꼬리는 정규분포의 꼬리보다 두꺼움 
+
+<br>
+![tdist](http://ci.columbia.edu/ci/premba_test/c0331/images/s7/6317178747.gif)
+
+<br> 
+
+## 2. 확률 
+
+<br>
+집합 상에서 정의된 함수로써, 불확실성의 척도이다.
+
+#### 2.1 용어 
+
+* 실험 (experiment)
+    - 예를 들어 동전을 던지거나, 주사위를 던지는 행위, 혹은 여론조사 등 
+    - 다양한 결과가 예측되는 행위일체
+* 표본공간 (sample space)
+    - 실험을 통하여 얻을 수 있는 모든 가능한 결과의 모임
+    - 예) 동전 던지기의 경우 $S = \left\{ H, T \right\}$
+* 근원사상(elementary event)
+    - 표본공간을 이루는 개개의 결과
+* 사상(event)
+    - 표본공간의 부분집합
+    
+<br> 
+
+#### 2.2 확률의 정의 (공리적 정의)
+다음의 조건을 만족하는 함수 $P$를 확률이라고 함
+
+* 표본공간 $S$에서의 임의의 사상 $A$에 대하여 ${0}\leq P(A)$
+* $P(S) = 1$
+* 서로 배반인 사상, 즉 $A_{i}  \cap A_{j}  =  \emptyset$인 $A_{1} ,A _{2} ,\ldots$에 대하여 $$P( \cup _{i=1} ^{\infty} A_{i} ) = \sum_{i=1} ^{\infty} P(A_{i} )$$
+
+<br> 
+
+#### 2.3 확률의 관한 성질
+
+* $P ({A}\cup{B}) = P ({A})+P({B}) - P({A}\cap {B})$
+* $P(A ^{c} )=1-P(A)$
+* ${A} \subset {B}$이면 $P(A) \leq P(B)$
+
+
+<br> 
+
+
+#### 2.4 조건부 확률 (conditional probability)
+
+* 사상 $A$가 주어졌을 때, $B$의 조건부 확률은 $$P(B|A)=P(A \cap {B})/P(A) \quad (단,\;  P(A)>0)$$
+
+
+<br> 
+
+
+#### 2.5 독립사상
+
+* 사상 $A$와 사상 $B$가 독립 $\Leftrightarrow \; {P}({A} \cap {B})=P(A)P(B)$
+
+********************************
+    * 작성자: 최대우 (한국외대), 김준석, 황명식(한국외대 Advice)
+    * 작성일: 2014년 9월
+
+![logo](./image/AdviceLOGO.png)
