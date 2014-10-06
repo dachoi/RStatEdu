@@ -1,0 +1,302 @@
+---
+title: "Introduction to Statistics and Probability - III"
+output: word_document
+mode: standalone
+---
+
+- 필요 파일 : 없음
+
+
+------------------------------------------------------
+
+## 4. 이항분포와 정규분포
+
+<br>
+
+#### 4.1 베르누이(Bernoulli)시행
+
+- 시행의 결과는 일반적으로 "성공($s$)"과 "실패($f$)"로 나타냄. 즉, 표본공간은 $S=\left\{s,f\right\}$
+
+- 성공의 확률을 $p=P\big(\{s\}\big)$, 실패의 확률을 $q=P\big(\{f\}\big)$ 로 나타냄. $(p+q=1)$
+
+<br>
+
+#### 4.2 베르누이 확률변수
+
+베르누이 새행의 표본공간 $\{s,f\}$ 에서 $Y\big(\{s\}\big)=1$, $Y\big(\{f\}\big)=0$ 인 확률 변수를 베르누이 확률변수라 함
+
+<br>
+
+#### 4.3 이항분포
+
+- 성공확률이 $p$인 베르누이 시행이 $n$번 독립적으로 반복 시행 되었을 때, 확률변수 $X$를 "성공횟수"
+
+- 이 때 $X$의 확률분포를 시행횟수 $n$과 성공률 $p$를 갖는 이항분포(binomial distribution)이라 함
+
+- 이항분포는 $X~B(n,p)$로 표시
+
+- 이항분포의 확률질량함수는 다음과 같음 $$P(X=x)= {n \choose x} {p^x} (1-p)^{n-x}, \;\;\; {x}={0},{1},\ldots ,{n}$$
+
+<br>
+
+#### 4.4 정규분포
+
+- 평균이 $\mu$ 이고, 표준편차가 $\sigma$인 정규분포의 확률질량함수는 다음과 같음 $$f(x)= \frac{1}{\sqrt{2\pi\sigma}}exp\bigg[-\frac{(x-\mu)^2}{2\sigma^2}\bigg], \;\;\; -\infty < x < \infty$$
+
+<br>
+
+#### 4.5 정규분포에서의 대표적인 확률
+$X~N(\mu,\sigma^2)$ 일 때,
+$$P(\mu-\sigma < X < \mu+\sigma) = 0.683$$
+$$P(\mu-2\sigma < X < \mu+2\sigma) = 0.954$$
+$$P(\mu-3\sigma < X < \mu+3\sigma) = 0.997$$
+
+<br>
+
+#### 4.6 표준정규 분포
+$X~N(\mu,\sigma^2)$ 일 때,
+$$ Z=\frac{X-\mu}{\sigma} \sim N(0,1)$$
+
+<br>
+
+#### 4.7 이항분포의 정규근사
+
+- 이항분포 $B(n,p)$를 따르는 확률변수 $X$에 대하여, $n$이 충분히 크고 $p$가 0 또는 1에 가깝지 않다면 표준화된 확률변수 $(X-np)/\sqrt{npq}$ 는 근사적으로 표준정규분포 $N(0,1)$을 따름
+$$P(a\leq X \leq b)\approx P\bigg(\frac{a-0.5-np}{\sqrt{npq}}\leq Z \leq \frac{b+0.5-np}{\sqrt{npq}}\bigg)$$
+
+<br>
+
+#### 4.8 R을 이용한 정규분포 계산
+
+<br>
+
+  ![normal1](http://cosstatistics.pbworks.com/f/1281151758/normal%20distribution%20table.png)
+  
+<br>
+
+  ![normal2](http://images.books24x7.com/bookimages/id_15231/p2000af46g2710001vpp_thm.jpg)
+  
+
+* R에서는 확률분포와 관련된 몇가지 함수를 제공함
+
+    * `p` 계열 : 누적분포함수 $P ( X \leq x)$
+    
+    * `d` 계열 : 확률밀도함수
+    
+    * `q` 계열 : quantile 함수 ( $\min_{x} \{ P(X \leq x ) > q \}$ )
+    
+    * `r` 계열 : Random Number의 생성
+    
+* 정규분포 관련 명령어 `dnorm` , `pnorm` , `qnorm` , `rnorm`가 있음
+
+    * 상세한 정규분포에 대한 설명은  [위키피디아](http://en.wikipedia.org/wiki/Normal_distribution) 참조바람
+    
+    ![alt text](http://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Standard_deviation_diagram.svg/325px-Standard_deviation_diagram.svg.png)
+
+
+```{r}
+pnorm(0)
+dnorm(0)
+dnorm(1)
+dnorm(-1)
+qnorm(0.5)
+```
+
+```{r}
+rfoo <- rnorm(300)
+hist(rfoo)
+```
+
+
+## 5. 표본 분포
+
+<br>
+
+#### 5.1 확률표본 (random sample)
+
+모집한 $f(x)$로 부터의 확률표본 $X_{1}, \ldots , X_{n}$ 이란 $f(x)$를 확률밀도 함수로 갖는 서로 독립인 확률변수들을 뜻함
+
+<br>
+
+#### 5.2 통계량
+
+관측가능한 확률표본의 함수
+
+<br>
+
+#### 5.3 표본평균과 표본분산
+
+- 표본평균 : $\bar{X} = \sum_{i=1}^{n}X_i/n$
+
+- 표본분산 : $S^2 = \sum_{i=1}^{n}(X_i - \bar{X})^2/(n-1)$
+
+<br>
+
+#### 5.4 표본분포
+
+통계량의 확률분포를 표본분포라 함
+
+<br>
+
+#### 5.5 표본평균의 평균과 표준편차
+
+크기 $n$인 확률표본으로부터의 표본평균 $\bar{X}$에 대하여 모평균이 $\mu$이고 모분산이 $\sigma^2$이면
+$$E(\bar{X})=\mu$$
+$$Var(\bar{X})=\frac{\sigma^2}{n}$$
+
+<br>
+
+#### 5.6 표본평균의 분포
+
+정규분포 $N(\mu,\sigma^2)$으로부터의 표본평균 $\bar{X}$는 정규분포 $N\bigg(\mu,\frac{\sigma^2}{n}\bigg)$ 를 따름
+
+<br>
+
+#### 5.7 중심극한 정리
+
+평균이 $\mu$이고 분산이$\sigma^2$인 임의의 모집단으로부터 추출된 크기 $n$인 확률표본에서의 표본평균 $\bar{X}$는 $n$이 충분히 크다면 근사적으로 정규분포  $N\bigg(\mu,\frac{\sigma^2}{n}\bigg)$ 를 따름
+
+<br>
+
+#### 5.8 R을 이용한 중심극한 정리 예제 
+
+<br>
+
+표본의 크기가 충분히 크면, 동일한 분포에서 얻어진 확률표본평균과 합은 정규분포로 근사
+```{r}
+m = 50
+mx = rep(0, m)
+n.value = c(5, 10, 15, 30, 50)
+
+plot(0,0, type='n', xlim =c(0,1), ylim=c(0,15))
+
+for( k in 1:length(n.value)){
+  n <- n.value[k]
+    for( i in 1:m){
+      mx[i] <-mean(runif(n, 0, 1))
+    } # i
+  lines(density(mx), lty=k, col=k)
+} # k
+
+```
+
+  - `plot()`을 이용하여 빈 plot을 생성
+  
+  - `runif`함수를 이용하여 균일분포에서 각각 5,10,15,30,50개의 난수를 생성
+  
+  - 생성된 결과들의 평균을 구하여 중심극한 정리를 시뮬레이션
+
+<br>
+
+## 6. 추정
+
+<br>
+
+#### 6.1 점추정과 구간추정
+
+- 점추정(point estimation) : 미지의 모수를 한 개의 점으로 추정
+
+- 구간추정(interval estimation) : 모수가 속할 것이라고 기대되는 범위를 추정
+
+<br>
+
+#### 6.2 모평균 $\mu$의 점추정
+
+- 추정량(estimator) : 표본평균 $\hat{\mu}=\bar{X}$
+
+- 표준오차 : $S.E.(\hat{\mu})=\sigma/\sqrt{n}$
+
+- 표준오차의 추정량 : $\widehat{S.E.(\hat{\mu})}=S/\sqrt{n}$
+
+<br>
+
+#### 6.3 모평균 $\mu$의 구간추정 ($\sigma$ : known)
+
+모분산 $\sigma^2$이 알려진 정규모집단의 모평균 $\mu$에 대한 $100(1-\alpha)\%$ 신뢰구간은 다음과 같음
+$$\bigg(\bar{X}-z_{\alpha/2}\frac{\sigma}{\sqrt{n}} \;,\; \bar{X}+z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\bigg)$$ 
+
+<br>
+
+#### 6.4 모평균 $\mu$의 구간추정 ($\sigma$ : unknown)
+
+모분산 $\sigma^2$이 알려지지 않은 정규모집단의 모평균 $\mu$에 대한 $100(1-\alpha)\%$ 신뢰구간은 다음과 같음
+$$\bigg(\bar{X}-t(n-1,\alpha/2)\frac{\sigma}{\sqrt{n}} \;,\; \bar{X}+t(n-1,\alpha/2)\frac{\sigma}{\sqrt{n}}\bigg)$$ 
+
+<br>
+
+#### 6.5 모평균 $\mu$의 구간추정
+
+표본크기가 큰 경우, 임의의 모집단 모평균 $\mu$에 대한 $100(1-\alpha)\%$ 신뢰구간은 다음과 같음 
+
+- $\sigma^2$을 알 때 : $\bigg(\bar{X}-z_{\alpha/2}\frac{\sigma}{\sqrt{n}} \;,\; \bar{X}+z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\bigg)$
+
+- $\sigma^2$을 모를 때 : $\bigg(\bar{X}-z_{\alpha/2}\frac{s}{\sqrt{n}} \;,\; \bar{X}+z_{\alpha/2}\frac{s}{\sqrt{n}}\bigg)$
+
+
+<br>
+
+## 7. 검정
+
+<br>
+
+#### 7.1 귀무가설(null hypothesis) vs. 대립가설(alternative hypothesis)
+
+- 대립가설 : 연구자가 새롭게 밝히려는 가설
+      
+- 귀무가설 : 대립가설의 반대로 기존의 인정된 사실 (보수적 성향)
+
+<br>
+      
+#### 7.2 통계적 가설검정
+
+귀무가설 가정 하에 귀무가설을 허용오차 범위 내에서 기각(reject)할 수 있는가를 판단하는 과정으로 "귀무가설의 기각"과 "기각하지 못함"의 두 결정이 있음
+
+<br>
+
+#### 7.3 제 1종 오류(Type I error) vs. 제 2종 오류(Type II error)
+
+- 제 1종 오류 : 귀무가설이 참이나 귀무가설을 기각하는 오류
+
+- 제 2종 오류 : 대립가설이 참이나 귀무가설을 기각하지 않는 오류
+
+- $Pr(Type \; I \; error) = \alpha \; ; \; Pr(Type \; II \; error) = \beta$
+
+<br>
+
+#### 7.4 검정통계량(test statistics), 기각역(rejection region)
+
+<br>
+
+#### 7.5 p-value
+
+- 일종의 검정통계량에 의한 유의수준
+
+- 귀무가설이 참이라는 가정 하에 귀무가설을 기각할 수 잇는 최대 허용오차 한계
+
+- p-value와 유의수준의 크기를 비교하여 p-value가 유의수준 보다 작으면 귀무가설을 기각
+
+- 예 : 유의수준 0.005일 때, p-value가 0.028이면 귀무가설을 기각
+
+<br>
+
+#### 7.6 검정통계량의 분포
+
+- 표본의 크기가 큰 경우 : 중심극한 정리를 이용한 표준정규 분포를 이용
+
+- 표본의 크기가 작은 경우
+
+    - 중심극한 정리를 적용할 수 없음
+    
+    - 표본 표준편차 $s$도 모 표준편차 $\sigma$에 대한 근사적 추정치라고 할 수 없음
+    
+    - 이와 같은 겨우 아래의 검정통계량은 t-분포를 따른다고 함
+  
+$$ t=\frac{\bar{X}-\mu}{s/\sqrt{n}} $$ 
+
+
+********************************
+    * 작성자: 최대우 (한국외대), 김준석, 황명식(한국외대 Advice)
+    * 작성일: 2014년 9월
+
+![logo](./image/AdviceLOGO.png)
+
